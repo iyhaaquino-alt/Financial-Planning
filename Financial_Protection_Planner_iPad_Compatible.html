@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Financial Protection & Retirement Planner</title>
+<style>
+:root{--ink:#241b1e;--muted:#6d6265;--cream:#f8f1ed;--rose:#8b2340;--rose2:#b43b59;--green:#17613b;--green2:#0f4b2e;--orange:#d97706;--red:#c62828;--card:#fffdfb;--line:#e7dcd7}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#eee7e3;color:var(--ink);-webkit-font-smoothing:antialiased}
+.app{max-width:980px;margin:24px auto;padding:0 14px}
+.header{background:linear-gradient(135deg,#6f1833,#9c2948);color:white;border-radius:18px 18px 10px 10px;padding:24px 26px;box-shadow:0 8px 25px #0001}
+.kicker{font-size:11px;letter-spacing:2px;font-weight:800}
+h1{margin:6px 0 5px;font-family:Georgia,serif;font-size:29px;letter-spacing:.3px}
+.sub{opacity:.88;font-size:13px}
+.badge{float:right;margin-top:-34px;background:#ffffff18;border:1px solid #ffffff40;padding:8px 12px;border-radius:999px;font-size:12px}
+.tabs{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;background:#fff;padding:10px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.tab{border:1px solid var(--line);background:#fff8f5;border-radius:10px;padding:11px 13px;font-weight:700;white-space:nowrap;font-size:12px;cursor:pointer;min-height:42px;-webkit-appearance:none;appearance:none;touch-action:manipulation}
+.tab.active{background:var(--rose);color:white;border-color:var(--rose)}
+.note{margin:14px 0;background:#fff;border:1px dashed #bba9a2;border-radius:12px;padding:12px;text-align:center;color:#65595c;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;margin:12px 0;box-shadow:0 3px 10px #00000008}
+.section-title{font-weight:900;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+label{font-size:11px;font-weight:800;color:#685c60;display:block;margin-bottom:6px}
+input{width:100%;padding:12px;border:1px solid #d8cbc6;border-radius:10px;background:#fff;font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
+input:focus{border-color:var(--rose);box-shadow:0 0 0 3px #8b234015}
+input[readonly]{background:#f5efec;color:#5f5558}
+.result{border-radius:15px;padding:20px;color:white;margin:12px 0}
+.green{background:linear-gradient(135deg,var(--green2),#207448)}
+.red{background:linear-gradient(135deg,#9d1b1b,#e33a2d)}
+.gold{background:linear-gradient(135deg,#a45d05,#df8c12)}
+.result small{display:block;opacity:.85;font-weight:700}
+.result .big{font-size:30px;font-weight:900;margin:5px 0}
+.result .explain{font-size:12px;opacity:.9}
+.row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #eee4df;font-size:13px}
+.row:last-child{border-bottom:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}
+.primary{background:var(--rose);color:#fff}.secondary{background:#fff;border:1px solid var(--line)}
+.disclaimer{font-size:10px;line-height:1.5;color:#766a6d;background:#f5efec;border-radius:10px;padding:11px;margin-top:14px}
+.hidden{display:none!important}
+.footer{text-align:center;color:#827679;font-size:10px;padding:14px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.badge{float:none;display:inline-block;margin:10px 0 0}h1{font-size:24px}.app{margin:8px auto;padding:0 10px}}
+@media print{
+ .tabs,.note,.actions{display:none!important}
+ section.hidden{display:none!important}
+ .app{max-width:none;margin:0;padding:0}
+ body{background:white}
+ .card,.result{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="header">
+<div class="badge">CLIENT PLANNING TOOL</div>
+<div class="kicker">FINANCIAL NEEDS ANALYSIS</div>
+<h1>Financial Protection & Retirement Planner</h1>
+<div class="sub">A simple illustration of protection gaps and long-term goals</div>
+</div>
+
+<div class="tabs">
+<button type="button" class="tab active" onclick="showTab('profile',this)">Client Profile</button>
+<button type="button" class="tab" onclick="showTab('life',this)">Life</button>
+<button type="button" class="tab" onclick="showTab('ci',this)">Critical Illness</button>
+<button type="button" class="tab" onclick="showTab('retirement',this)">Retirement</button>
+<button type="button" class="tab" onclick="showTab('investment',this)">Investment</button>
+<button type="button" class="tab" onclick="showTab('summary',this)">Summary</button>
+</div>
+
+<div class="note">Enter the client's numbers below. The figures update automatically.</div>
+
+<section id="profile">
+<div class="card">
+<div class="section-title">👤 YOUR INFORMATION</div>
+<div class="grid">
+<div><label>AGE</label><input id="age" type="number" value="30" min="18" max="100" oninput="calc()"></div>
+<div><label>TARGET RETIREMENT AGE</label><input id="retAge" type="number" value="55" min="30" max="100" oninput="calc()"></div>
+<div><label>MONTHLY INCOME (₱)</label><input id="income" type="number" value="80000" min="0" oninput="calc()"></div>
+<div><label>MONTHLY EXPENSES (₱)</label><input id="expenses" type="number" value="45000" min="0" oninput="calc()"></div>
+<div><label>NUMBER OF DEPENDENTS</label><input id="dependents" type="number" value="2" min="0" oninput="calc()"></div>
+<div><label>CURRENT SAVINGS / INVESTMENTS (₱)</label><input id="savings" type="number" value="300000" min="0" oninput="calc()"></div>
+<div><label>EXISTING LIFE COVERAGE (₱)</label><input id="lifeCov" type="number" value="500000" min="0" oninput="calc()"></div>
+<div><label>EXISTING CRITICAL ILLNESS COVERAGE (₱)</label><input id="ciCov" type="number" value="0" min="0" oninput="calc()"></div>
+</div>
+</div>
+</section>
+
+<section id="life" class="hidden">
+<div class="card">
+<div class="section-title">❤️ LIFE PROTECTION NEED</div>
+<div class="row"><span>Annual income</span><b id="annualIncome"></b></div>
+<div class="row"><span>Income replacement years</span><b id="replacementYears"></b></div>
+<div class="row"><span>Estimated income replacement need</span><b id="incomeReplacement"></b></div>
+<div class="row"><span>Existing life coverage</span><b id="lifeExisting"></b></div>
+</div>
+<div class="result red">
+<small>ESTIMATED LIFE PROTECTION GAP</small>
+<div class="big" id="lifeGap"></div>
+<div class="explain">Illustrative gap after deducting existing life coverage and current savings.</div>
+</div>
+</section>
+
+<section id="ci" class="hidden">
+<div class="card">
+<div class="section-title">🩺 CRITICAL ILLNESS FUND</div>
+<div class="grid">
+<div><label>RECOVERY / INCOME-REPLACEMENT MONTHS</label><input id="ciMonths" type="number" value="24" min="1" max="120" oninput="calc()"></div>
+<div><label>ADDITIONAL MEDICAL BUFFER (₱)</label><input id="medicalBuffer" type="number" value="500000" min="0" oninput="calc()"></div>
+</div>
+<div class="row"><span>Income replacement during recovery</span><b id="ciIncome"></b></div>
+<div class="row"><span>Additional medical buffer</span><b id="ciBuffer"></b></div>
+<div class="row"><span>Existing CI coverage</span><b id="ciExisting"></b></div>
+</div>
+<div class="result red">
+<small>ESTIMATED CRITICAL ILLNESS GAP</small>
+<div class="big" id="ciGap"></div>
+<div class="explain">Illustrative planning amount—not a medical cost estimate or policy quotation.</div>
+</div>
+</section>
+
+<section id="retirement" class="hidden">
+<div class="card">
+<div class="section-title">💰 RETIREMENT PLAN</div>
+<div class="grid">
+<div><label>CURRENT AGE</label><input id="retPlanAge" type="number" value="30" min="18" max="100" readonly></div>
+<div><label>RETIREMENT AGE PLAN</label><input id="retPlanAgeTarget" type="number" value="55" min="30" max="100" readonly></div>
+<div><label>YEARS REMAINING</label><input id="retYearsRemaining" type="number" value="25" readonly></div>
+<div><label>DESIRED MONTHLY RETIREMENT INCOME (₱)</label><input id="retIncome" type="number" value="50000" min="0" oninput="calc()"></div>
+</div>
+<div class="row"><span>Years remaining</span><b id="planYears"></b></div>
+<div class="row"><span>Target retirement age</span><b id="planRetAge"></b></div>
+</div>
+<div class="result green">
+<small>ESTIMATED RETIREMENT FUND GOAL</small>
+<div class="big" id="retGoal"></div>
+<div class="explain">Simple illustration based on desired monthly retirement income for 20 years. No current savings, inflation, or investment return is included.</div>
+</div>
+</section>
+
+<section id="investment" class="hidden">
+<div class="card">
+<div class="section-title">📈 INVESTMENT PLAN</div>
+<div class="grid">
+<div><label>CURRENT INVESTMENT (₱)</label><input id="invCurrent" type="number" value="300000" min="0" oninput="calc()"></div>
+<div><label>MONTHLY INVESTMENT (₱)</label><input id="invMonthly" type="number" value="10000" min="0" oninput="calc()"></div>
+<div><label>INVESTMENT PERIOD (YEARS)</label><input id="invYears" type="number" value="10" min="0" max="100" oninput="calc()"></div>
+<div><label>EXPECTED ANNUAL RETURN (%)</label><input id="invReturn" type="number" value="6" min="0" max="100" step="0.1" oninput="calc()"></div>
+</div>
+</div>
+<div class="result green">
+<small>ILLUSTRATIVE FUTURE VALUE</small>
+<div class="big" id="invFuture"></div>
+<div class="explain">Illustration only. Actual investment returns are not guaranteed.</div>
+</div>
+<div class="card">
+<div class="row"><span>Total contributions</span><b id="invContrib"></b></div>
+<div class="row"><span>Illustrative growth</span><b id="invGrowth"></b></div>
+</div>
+</section>
+
+<section id="summary" class="hidden">
+<div class="card">
+<div class="section-title">📋 CLIENT FINANCIAL SNAPSHOT</div>
+<div class="row"><span>Years to retirement</span><b id="sumYears"></b></div>
+<div class="row"><span>Life protection gap</span><b id="sumLife"></b></div>
+<div class="row"><span>Critical illness gap</span><b id="sumCI"></b></div>
+<div class="row"><span>Retirement fund goal</span><b id="sumRet"></b></div>
+<div class="row"><span>Investment future value</span><b id="sumInv"></b></div>
+</div>
+<div class="result green">
+<small>PLANNING PRIORITY</small>
+<div class="big" id="priority"></div>
+<div class="explain">Use this as a conversation guide. Review actual product illustrations, underwriting, policy terms and client objectives before recommending a solution.</div>
+</div>
+<div class="actions">
+<button type="button" class="primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+<button type="button" class="secondary" onclick="resetForm()">↺ Reset</button>
+</div>
+</section>
+
+<div class="disclaimer">
+<b>Important:</b> This is an educational financial-planning illustration only. It is not an official insurer quotation, guaranteed benefit illustration, investment advice, or a substitute for an approved product illustration. Assumptions can materially change the results. Use actual policy documents and current insurer-approved illustrations when presenting specific insurance products.
+</div>
+<div class="footer">Financial Protection & Retirement Planner • iPad-friendly version</div>
+</div>
+
+<script>
+function peso(n){
+  n=Math.max(0,Number(n)||0);
+  return '₱'+n.toLocaleString('en-PH',{maximumFractionDigits:0});
+}
+function num(id){
+  var el=document.getElementById(id);
+  return el ? (Number(el.value)||0) : 0;
+}
+function calc(){
+  var age=num('age'), ra=num('retAge'), income=num('income');
+  var savings=num('savings'), lifeCov=num('lifeCov'), ciCov=num('ciCov');
+  var years=Math.max(0,ra-age), annual=income*12;
+
+  var replacementYears=Math.min(10,Math.max(5,Math.ceil(years/2)));
+  var lifeNeed=annual*replacementYears;
+  var lifeGap=Math.max(0,lifeNeed-lifeCov-savings);
+
+  var months=num('ciMonths'), buffer=num('medicalBuffer');
+  var ciNeed=income*months+buffer;
+  var ciGap=Math.max(0,ciNeed-ciCov);
+
+  var retYearsRemaining=years;
+  var desired=num('retIncome');
+  var retirementYears=20;
+  var retGoal=desired*12*retirementYears;
+
+  document.getElementById('retPlanAge').value=age;
+  document.getElementById('retPlanAgeTarget').value=ra;
+  document.getElementById('retYearsRemaining').value=retYearsRemaining;
+
+  var invCurrent=num('invCurrent'), invMonthly=num('invMonthly');
+  var invYears=num('invYears'), invReturn=num('invReturn');
+  var periods=Math.max(0,Math.round(invYears*12));
+  var monthlyRate=invReturn/100/12;
+  var invFuture;
+  if(periods===0) invFuture=invCurrent;
+  else if(monthlyRate===0) invFuture=invCurrent+invMonthly*periods;
+  else {
+    var factor=Math.pow(1+monthlyRate,periods);
+    invFuture=invCurrent*factor+invMonthly*((factor-1)/monthlyRate);
+  }
+  var invContrib=invCurrent+invMonthly*periods;
+  var invGrowth=Math.max(0,invFuture-invContrib);
+
+  document.getElementById('annualIncome').textContent=peso(annual);
+  document.getElementById('replacementYears').textContent=replacementYears+' years';
+  document.getElementById('incomeReplacement').textContent=peso(lifeNeed);
+  document.getElementById('lifeExisting').textContent=peso(lifeCov);
+  document.getElementById('lifeGap').textContent=peso(lifeGap);
+
+  document.getElementById('ciIncome').textContent=peso(income*months);
+  document.getElementById('ciBuffer').textContent=peso(buffer);
+  document.getElementById('ciExisting').textContent=peso(ciCov);
+  document.getElementById('ciGap').textContent=peso(ciGap);
+
+  document.getElementById('planYears').textContent=retYearsRemaining+' years';
+  document.getElementById('planRetAge').textContent=ra;
+  document.getElementById('retGoal').textContent=peso(retGoal);
+
+  document.getElementById('invFuture').textContent=peso(invFuture);
+  document.getElementById('invContrib').textContent=peso(invContrib);
+  document.getElementById('invGrowth').textContent=peso(invGrowth);
+
+  document.getElementById('sumYears').textContent=years+' years';
+  document.getElementById('sumLife').textContent=peso(lifeGap);
+  document.getElementById('sumCI').textContent=peso(ciGap);
+  document.getElementById('sumRet').textContent=peso(retGoal);
+  document.getElementById('sumInv').textContent=peso(invFuture);
+
+  var priority='Balanced planning';
+  var gaps=[['Life Protection',lifeGap],['Critical Illness',ciGap],['Retirement',retGoal]];
+  gaps.sort(function(a,b){return b[1]-a[1];});
+  if(gaps[0][1]>0) priority=gaps[0][0]+' first';
+  document.getElementById('priority').textContent=priority;
+}
+function showTab(id,btn){
+  document.querySelectorAll('section').forEach(function(s){s.classList.add('hidden');});
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  calc();
+}
+function resetForm(){
+  document.querySelectorAll('input').forEach(function(i){i.value=i.defaultValue;});
+  calc();
+}
+calc();
+</script>
+</body>
+</html>
